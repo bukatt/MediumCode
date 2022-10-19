@@ -15,9 +15,11 @@ export class MyInputComponent implements OnInit, ControlValueAccessor {
   set value(val: string){
     this._value = val;
     this.onChange(val);
+    
   }
 
   disabled: boolean = false;
+  invalid: boolean = false;
   id: string = `input-${nextId++}`;
 
   onChange = (_: any) => {};
@@ -43,6 +45,10 @@ export class MyInputComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
+
   ngOnInit(): void {
+    this.control.statusChanges?.subscribe(status => {
+      this.invalid = (status === 'INVALID' && ((this.control.touched ?? false) || (this.control.dirty ?? false)))
+    })
   }
 }
